@@ -76,13 +76,20 @@ public class LogDataAccess {
      * @see #findAll()
      * @param taskCode 削除するログのタスクコード
      */
-    // public void deleteByTaskCode(int taskCode) {
-    //     try () {
+    public void deleteByTaskCode(int taskCode) {
+        List<Log> logList = findAll();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write("Task_Code,Change_User_Code,Status,Change_Date");
 
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
+            for (Log log : logList) {
+                if(taskCode == log.getTaskCode()) continue;
+                writer.write(createLine(log));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * ログをCSVファイルに書き込むためのフォーマットを作成します。

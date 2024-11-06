@@ -129,6 +129,7 @@ public class TaskLogic {
         }
 
         taskDataAccess.delete(code);
+        logDataAccess.deleteByTaskCode(code);
         System.out.println(task.getName()+"の削除が完了しました。");
     }
 }
