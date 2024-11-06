@@ -104,6 +104,7 @@ public class TaskDataAccess {
                 int repUserCode = Integer.parseInt(values[3]);
                 User user = userDataAccess.findByCode(repUserCode);
                 task = new Task(code,name,status,user);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -117,13 +118,26 @@ public class TaskDataAccess {
      * 
      * @param updateTask 更新するタスク
      */
-    // public void update(Task updateTask) {
-    // try () {
+    public void update(Task updateTask) {
+        List<Task> taskList = findAll();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write("Code,Name,Status,Rep_User_Code\n");
 
-    // } catch (IOException e) {
-    // e.printStackTrace();
-    // }
-    // }
+            String line;
+            for (Task task : taskList) {
+                if (task.getCode() == updateTask.getCode()) {
+                    updateTask.setStatus(updateTask.getStatus()+1);
+                    line = createLine(updateTask);
+                } else {
+                    line = createLine(task);
+                }
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * コードを基にタスクデータを削除します。
@@ -147,7 +161,7 @@ public class TaskDataAccess {
     private String createLine(Task task) {
         String taskFormat = task.getCode() + ","
                 + task.getName() + ","
-                + "0" + ","
+                + task.getStatus() + ","
                 + task.getRepUser().getCode();
         return taskFormat;
     }

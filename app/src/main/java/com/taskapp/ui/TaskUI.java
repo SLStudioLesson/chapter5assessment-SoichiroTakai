@@ -151,7 +151,7 @@ public class TaskUI {
                 flg = false;
             }
         } catch (AppException e) {
-            e.getMessage();
+            System.out.println(e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -224,7 +224,7 @@ public class TaskUI {
                 taskLogic.changeStatus(Integer.parseInt(changeTaskCode), Integer.parseInt(newStatus), loginUser);
 
             } catch (AppException e) {
-                e.getMessage();
+                System.out.println(e.getMessage());
             }catch (IOException e) {
                 e.printStackTrace();
             }
