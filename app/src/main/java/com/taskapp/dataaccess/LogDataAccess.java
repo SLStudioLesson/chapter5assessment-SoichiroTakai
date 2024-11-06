@@ -1,8 +1,13 @@
 package com.taskapp.dataaccess;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.taskapp.model.Log;
 
@@ -42,14 +47,28 @@ public class LogDataAccess {
      *
      * @return すべてのログのリスト
      */
-    // public List<Log> findAll() {
-    //     try () {
+    public List<Log> findAll() {
+        List<Log> logList = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            reader.readLine();
+            while ((line = reader.readLine()) != null) {
+                String[] values = line.split(",");
 
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-    //     return null;
-    // }
+                int taskCode = Integer.parseInt(values[0]);
+                int changeUserCode = Integer.parseInt(values[1]);
+                int status = Integer.parseInt(values[2]);
+                LocalDate date = LocalDate.parse(values[3]);
+
+                Log log = new Log(taskCode, changeUserCode, status, date);
+                logList.add(log);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return logList;
+    }
 
     /**
      * 指定したタスクコードに該当するログを削除します。

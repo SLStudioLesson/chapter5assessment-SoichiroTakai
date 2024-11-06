@@ -120,6 +120,15 @@ public class TaskLogic {
      * @param code タスクコード
      * @throws AppException タスクコードが存在しない、またはタスクのステータスが完了でない場合にスローされます
      */
-    // public void delete(int code) throws AppException {
-    // }
+    public void delete(int code) throws AppException {
+        Task task = taskDataAccess.findByCode(code);
+        if(task==null){
+            throw new AppException("存在するタスクコードを入力してください");
+        }else if(2 != taskDataAccess.findByCode(code).getStatus()){
+            throw new AppException("ステータスが完了のタスクを選択してください");
+        }
+
+        taskDataAccess.delete(code);
+        System.out.println(task.getName()+"の削除が完了しました。");
+    }
 }

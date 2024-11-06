@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.taskapp.exception.AppException;
 import com.taskapp.model.Task;
 import com.taskapp.model.User;
 
@@ -96,22 +95,22 @@ public class TaskDataAccess {
             while ((line = reader.readLine()) != null) {
                 String[] values = line.split(",");
 
-                if (Integer.parseInt(values[0])!=(code)) continue;
+                if (Integer.parseInt(values[0]) != (code))
+                    continue;
 
                 // int code = Integer.parseInt(values[0]);
                 String name = values[1];
                 int status = Integer.parseInt(values[2]);
                 int repUserCode = Integer.parseInt(values[3]);
                 User user = userDataAccess.findByCode(repUserCode);
-                task = new Task(code,name,status,user);
+                task = new Task(code, name, status, user);
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-    return task;
+        return task;
     }
-
 
     /**
      * タスクデータを更新します。
@@ -126,7 +125,7 @@ public class TaskDataAccess {
             String line;
             for (Task task : taskList) {
                 if (task.getCode() == updateTask.getCode()) {
-                    updateTask.setStatus(updateTask.getStatus()+1);
+                    updateTask.setStatus(updateTask.getStatus() + 1);
                     line = createLine(updateTask);
                 } else {
                     line = createLine(task);
@@ -144,13 +143,20 @@ public class TaskDataAccess {
      * 
      * @param code 削除するタスクのコード
      */
-    // public void delete(int code) {
-    // try () {
+    public void delete(int code) {
+        List<Task> taskList = findAll();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write("Code,Name,Status,Rep_User_Code\n");
 
-    // } catch (IOException e) {
-    // e.printStackTrace();
-    // }
-    // }
+            for (Task task : taskList) {
+                if (task.getCode() == code) continue;
+                writer.write(createLine(task));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * タスクデータをCSVに書き込むためのフォーマットを作成します。
