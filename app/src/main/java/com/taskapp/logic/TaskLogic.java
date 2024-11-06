@@ -107,7 +107,6 @@ public class TaskLogic {
         }
 
         taskDataAccess.update(task);
-        System.out.println(task.getStatus()+1);
         Log log = new Log(code, loginUser.getCode(), task.getStatus()+1, LocalDate.now());
         logDataAccess.save(log);
     }
